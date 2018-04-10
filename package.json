@@ -4,11 +4,18 @@
   "description": "DnD Map Manager and eventual 2d shooter",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch"
   },
   "author": "Anders Pitman",
   "license": "ISC",
   "dependencies": {
     "phaser": "^3.3.0"
+  },
+  "devDependencies": {
+    "raw-loader": "^0.5.1",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13"
   }
 }
