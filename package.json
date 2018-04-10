@@ -1,0 +1,14 @@
+{
+  "name": "jareds_folly",
+  "version": "0.1.0",
+  "description": "DnD Map Manager and eventual 2d shooter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anders Pitman",
+  "license": "ISC",
+  "dependencies": {
+    "phaser": "^3.3.0"
+  }
+}
