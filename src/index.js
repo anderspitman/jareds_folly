@@ -22,7 +22,7 @@ let graphics;
 
 function preload () {
   this.load.image('chicken_room', 'assets/map_images/Chicken Room.jpg');
-  //this.load.image('chicken_room', 'assets/map_images/chicken_room.jpg');
+  this.load.image('soldier', 'assets/sprites/roman_foot_soldier.png');
 }
 
 function create () {
@@ -31,6 +31,15 @@ function create () {
   const roomImage = this.add.sprite(config.width / 2, config.height / 2, 'chicken_room');
   graphics = this.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
   const grid = new Grid({ graphics, width: config.width, height:config.height });
+
+  const coords = grid.getCellCenter(5, 5);
+  const soldier = this.add.sprite(coords.x, coords.y, 'soldier');
+  soldier.setScale(1.5, 1.5);
+
+  grid.onGridChange(() => {
+    const coords = grid.getCellCenterForCoordinates(soldier.x, soldier.y);
+    soldier.setPosition(coords.x, coords.y);
+  });
 
   window.addEventListener('wheel', (event) => {
 
@@ -53,6 +62,13 @@ function create () {
     }
   });
 
+  this.input.on('pointerdown', (pointer) => {
+    console.log(pointer.x, pointer.y);
+
+    const coords = grid.getCellCenterForCoordinates(pointer.x, pointer.y);
+    soldier.setPosition(coords.x, coords.y);
+  });
+
   grid.draw();
   
 }
@@ -66,8 +82,10 @@ class Grid {
     this.spacing = 50;
     this.spacingStep = 1;
     this.startOffsetStep = 1;
-    this.startX = -100;
-    this.startY = -100;
+    this.numPaddingCells = 2;
+    this.padding = this.spacing * this.numPaddingCells;
+    this.startX = -this.padding;
+    this.startY = -this.padding;
     this.width = width;
     this.height = height;
     this.updateEndX();
@@ -118,6 +136,7 @@ class Grid {
     const gridUpButton = document.getElementById('grid-up-button');
     gridUpButton.addEventListener('click', (event) => {
       this.startY -= this.startOffsetStep;
+      this.offsetY -= this.startOffsetStep;
       this.updateEndY();
       this.draw();
     });
@@ -125,17 +144,53 @@ class Grid {
     const gridDownButton = document.getElementById('grid-down-button');
     gridDownButton.addEventListener('click', (event) => {
       this.startY += this.startOffsetStep;
+      this.offsetY += this.startOffsetStep;
       this.updateEndY();
       this.draw();
     });
   }
 
+  onGridChange(callback) {
+    this.callback = callback;
+  }
+
+  getCellCenterForCoordinates(x, y) {
+
+    const offsetX = (this.numPaddingCells * this.spacing) - Math.abs(this.startX);
+    const offsetY = (this.numPaddingCells * this.spacing) - Math.abs(this.startY);
+
+    console.log(offsetX, offsetY);
+
+    const row = Math.floor((x - offsetX)/ this.spacing);
+    const column = Math.floor((y - offsetY) / this.spacing);
+
+    console.log(row, column);
+
+    return this.getCellCenter(row, column);
+  }
+
+  getCellCenter(row, column) {
+    const offsetX = (this.numPaddingCells * this.spacing) - Math.abs(this.startX);
+    const offsetY = (this.numPaddingCells * this.spacing) - Math.abs(this.startY);
+
+    const x0 = offsetX + (this.spacing / 2);
+    const y0 = offsetY + (this.spacing / 2);
+
+    const x = x0 + (row * this.spacing);
+    const y = y0 + (column * this.spacing);
+
+    return {
+      x: x,
+      y: y,
+    };
+  }
+
   updateEndX() {
-      this.endX = this.startX + this.width + 200;
+      this.endX = this.startX + this.width + 2 * this.padding;
   }
 
   updateEndY() {
-      this.endY = this.startY + this.height + 200;
+      this.endY = this.startY + this.height + 2 * this.padding;
   }
 
   draw() {
@@ -157,5 +212,10 @@ class Grid {
         graphics.strokeLineShape(hline);
       }
     }
+
+    if (this.callback) {
+      this.callback();
+    }
   }
+
 }
