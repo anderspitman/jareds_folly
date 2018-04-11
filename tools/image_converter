@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+import os
+from PIL import Image
+
+for filename in os.listdir("images"):
+    print(filename)
+
+    path = os.path.join("images", filename)
+
+    image = Image.open(path)
+
+    width, height = image.size
+
+    print(image.size)
+    if height > width:
+        image = image.rotate(90, expand=1)
+
+    image.thumbnail((1920, 1080), Image.LANCZOS)
+
+    print(image.size)
+
+    out_path = os.path.join("output", filename)
+    image.save(out_path)
+

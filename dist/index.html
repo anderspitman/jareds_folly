@@ -4,7 +4,33 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-  <div id='container'></div>
+  <div id='container'>
+    <div id='controls'>
+      <input type='button' class='control-button' id='lock-grid-button'
+        value="Unlock Grid"></button>
+      <input type='button' class='control-button'
+        id='grid-spacing-increase-button'
+        value="Increase Grid Spacing"></button>
+      <input type='button' class='control-button'
+        id='grid-spacing-decrease-button'
+        value="Decrease Grid Spacing"></button>
+      <div class='grid-control'>
+        <input type='button' class='grid-control__button grid-control__left-button'
+          id='grid-left-button'
+          value="Left"></button>
+        <input type='button' class='grid-control__button grid-control__right-button'
+          id='grid-right-button'
+          value="Right"></button>
+        <input type='button' class='grid-control__button grid-control__up-button'
+          id='grid-up-button'
+          value="Up"></button>
+        <input type='button' class='grid-control__button grid-control__down-button'
+          id='grid-down-button'
+          value="Down"></button>
+      </div>
+    </div>
+    <div id='phaser-root'></div>
+  </div>
   <script src="/bundle.js"></script>
 </body>
 </html>
